@@ -14,3 +14,13 @@ compose:
 
 # instead of docker_api, use imagebuilder for multistage builds
 image_build_method: imagebuilder
+
+remote_sources:
+# include pip requirements (yq) so they can be resolved by Cachito and installed via Dockerfile
+- name: python-deps
+  remote_source:
+    repo: https://github.com/SDawley/devspaces-images.git
+    ref: 19a9437804b5814f2ee536c23c5710cb40650596
+    pkg_managers:
+      - pip
+    packages: {"pip": [{"path": "devspaces-pluginregistry/build/python", "requirements_build_files": ["requirements-build.txt"]}]}

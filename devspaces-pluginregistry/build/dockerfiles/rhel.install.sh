@@ -60,12 +60,9 @@ ${DNF} -y module reset nodejs && \
     echo "Installed Packages" && rpm -qa | sort -V && echo "End Of Installed Packages"
 
 # install yq (depends on jq and pyyaml - if jq and pyyaml not already installed, this will try to compile it)
-if [[ -f /tmp/root-local.tgz ]] || [[ ${BOOTSTRAP} == "true" ]]; then
+if [[ ${BOOTSTRAP} == "true" ]]; then
     mkdir -p "${HOME}"/.local
-    if [[ -f /tmp/root-local.tgz ]]; then
-        tar xf /tmp/root-local.tgz -C "${HOME}"/.local
-        rm -fr /tmp/root-local.tgz
-    fi
+
     /usr/bin/"${PYTHON_BIN}" -m pip install --user yq argcomplete
     # NOTE: using bootstrap.Dockerfile + ubi8/python-38      image, copy from /opt/app-root/src/.local == ~/.local
     # NOTE: using           Dockerfile + rhel8/postgresql-13 image, copy from /var/lib/pgsql/.local == ~/.local
