@@ -28,8 +28,5 @@ spec:
     value: devspaces-configbump
   - name: prefetch-input
     value: '{"type": "gomod", "path": "devspaces-configbump"}'
-  pipelineSpec:
-    tasks:
-    - name: runbuild
-      pipelineRef:
-        name: pipeline
+  pipelineRef:
+    name: pipeline
