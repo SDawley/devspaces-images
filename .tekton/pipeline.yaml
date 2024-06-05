@@ -110,7 +110,7 @@ spec:
       type: string
       default: ""
     results: 
-    - name: name: IMAGE_URL
+    - name: IMAGE_URL
       value: $(tasks.build-container.results.IMAGE_URL)
       description: ""
     - name: IMAGE_DIGEST
