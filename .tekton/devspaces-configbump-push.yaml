@@ -29,5 +29,5 @@ spec:
   pipelineSpec:
     tasks:
     - name: runbuild
-    taskRef:
+    pipelineRef:
       name: pipeline
