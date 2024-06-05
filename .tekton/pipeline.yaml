@@ -1,43 +1,30 @@
 apiVersion: tekton.dev/v1
-kind: PipelineRun
+kind: Pipeline
 metadata:
+  name: pipeline 
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/SDawley/devspaces-images?rev={{revision}}
-    build.appstudio.redhat.com/commit_sha: '{{revision}}'
-    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "devspaces-3-rhel-8"
-  creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: devspaces-images-test
-    appstudio.openshift.io/component: devspaces-configbump-devspaces-images-rhel
-    pipelines.appstudio.openshift.io/type: build
-  name: devspaces-configbump-devspaces-images-rhel-on-push
-  namespace: sdawley-tenant
 spec:
   params:
+  - name: tag
+    value: "3.14"
   - name: dockerfile
     value: build/dockerfiles/rhel.Dockerfile
   - name: git-url
     value: '{{source_url}}'
-  - name: output-image
-    value: quay.io/redhat-user-workloads/sdawley-tenant/devspaces-images-test/devspaces-configbump-devspaces-images-rhel:{{revision}}
-  - name: path-context
-    value: devspaces-configbump
+  - name: image-expires-after
+    value: 5d
   - name: revision
     value: '{{revision}}'
-  - name: hermetic
-    value: "true"
-  - name: prefetch-input
-    value: '{"type": "gomod", "path": "devspaces-configbump"}'
+  #- name: hermetic
+  #  value: "true"
   pipelineSpec:
-    finally:
+    finally: 
     - name: show-sbom
       params:
       - name: IMAGE_URL
         value: $(tasks.build-container.results.IMAGE_URL)
-      taskRef:
+      taskref:
         params:
         - name: name
           value: show-sbom
@@ -56,7 +43,7 @@ spec:
         value: $(params.output-image)
       - name: build-task-status
         value: $(tasks.build-container.status)
-      taskRef:
+      taskref:
         params:
         - name: name
           value: summary
@@ -69,75 +56,75 @@ spec:
       - name: workspace
         workspace: workspace
     params:
-    - description: Source Repository URL
-      name: git-url
+    - name: git-url
+      description: Source Repository URL
       type: string
-    - default: ""
+    - name: revision
       description: Revision of the Source Repository
-      name: revision
       type: string
-    - description: Fully Qualified Output Image
-      name: output-image
+      default: ""
+    - name: output-image
+      description: Fully Qualified Output Image
       type: string
-    - default: .
+    - name: path-context
       description: Path to the source code of an application's component from where
-        to build image.
-      name: path-context
+      to build image.
       type: string
-    - default: Dockerfile
+      default: .
+    - name: dockerfile
       description: Path to the Dockerfile inside the context specified by parameter
-        path-context
-      name: dockerfile
+      path-context
       type: string
-    - default: "false"
+      default: Dockerfile
+    - name: rebuild
       description: Force rebuild image
-      name: rebuild
       type: string
-    - default: "false"
+      default: "false"
+    - name: skip-checks
       description: Skip checks against built image
-      name: skip-checks
       type: string
-    - default: "false"
+      default: "false"
+    - name: hermetic
       description: Execute the build with network isolation
-      name: hermetic
       type: string
-    - default: ""
+      default: "true"
+    - name: prefetch-input
       description: Build dependencies to be prefetched by Cachi2
-      name: prefetch-input
       type: string
-    - default: "false"
+      default: ""
+    - name: java
       description: Java build
-      name: java
       type: string
-    - default: ""
+      default: "false"
+    - name: image-expires-after
       description: Image tag expiration time, time values could be something like
-        1h, 2d, 3w for hours, days, and weeks, respectively.
-      name: image-expires-after
-    - default: "true"
+      1h, 2d, 3w for hours, days, and weeks, respectively.
+      default: ""
+    - name: build-source-image
       description: Build a source image.
-      name: build-source-image
       type: string
-    - default: ""
+      default: "true"
+    - name: build-args-file
       description: Path to a file with build arguments which will be passed to podman
-        during build
-      name: build-args-file
+      during build
       type: string
-    results:
-    - description: ""
-      name: IMAGE_URL
+      default: ""
+    results: 
+    - name: name: IMAGE_URL
       value: $(tasks.build-container.results.IMAGE_URL)
-    - description: ""
-      name: IMAGE_DIGEST
+      description: ""
+    - name: IMAGE_DIGEST
       value: $(tasks.build-container.results.IMAGE_DIGEST)
-    - description: ""
-      name: CHAINS-GIT_URL
+      description: ""
+    - name: CHAINS-GIT_URL
       value: $(tasks.clone-repository.results.url)
-    - description: ""
-      name: CHAINS-GIT_COMMIT
+      description: ""
+    - name: CHAINS-GIT_COMMIT
       value: $(tasks.clone-repository.results.commit)
-    - description: ""
-      name: JAVA_COMMUNITY_DEPENDENCIES
+      description: ""
+    - name: JAVA_COMMUNITY_DEPENDENCIES
       value: $(tasks.build-container.results.JAVA_COMMUNITY_DEPENDENCIES)
+      description: ""
     tasks:
     - name: init
       params:
@@ -440,3 +427,4 @@ spec:
     secret:
       secretName: '{{ git_auth_secret }}'
 status: {}
+

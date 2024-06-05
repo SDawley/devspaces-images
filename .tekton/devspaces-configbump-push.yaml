@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/SDawley/devspaces-images?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
+      == "devspaces-3-rhel-8"
+    pipelinesascode.tekton.dev/pipeline: "./pipeline.yaml"
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: devspaces-images-test
+    appstudio.openshift.io/component: devspaces-configbump-devspaces-images-rhel
+    pipelines.appstudio.openshift.io/type: build
+  name: devspaces-configbump-on-push
+  namespace: sdawley-tenant
+spec:
+  params:
+  - name: output-image
+    # Will need to find a sane way to generate tags/builds
+    #value: quay.io/devspaces/devspaces-configbump:{{tag}}-{{revision}}
+    value: quay.io/redhat-user-workloads/sdawley-tenant/devspaces-images-test/devspaces-configbump-devspaces-images-rhel:{{revision}}
+  - name: path-context
+    value: devspaces-configbump
+  - name: prefetch-input
+    value: '{"type": "gomod", "path": "devspaces-configbump"}'
+  pipelineSpec:
+    tasks:
+    - name: runbuild
+    taskRef:
+      name: pipeline
