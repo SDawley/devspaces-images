@@ -3,6 +3,7 @@
   "version": "7.87.0",
   "description": "Dashboard for Eclipse Che",
   "private": true,
+  "packageManager": "yarn@3.8.1",
   "workspaces": {
     "packages": [
       "packages/*"
