@@ -31,6 +31,10 @@ spec:
     value: build/dockerfiles/rhel.Dockerfile
   - name: path-context
     value: devspaces-dashboard
+  - name: hermetic
+    value: "true"
+  - name: prefetch-input
+    value: '{"type": "yarn", "path": "devspaces-dashboard"}'
   pipelineSpec:
     finally:
     - name: show-sbom
@@ -113,7 +117,7 @@ spec:
       description: Image tag expiration time, time values could be something like
         1h, 2d, 3w for hours, days, and weeks, respectively.
       name: image-expires-after
-    - default: "false"
+    - default: "true"
       description: Build a source image.
       name: build-source-image
       type: string
