@@ -18,6 +18,7 @@ metadata:
   name: devspaces-configbump-on-pull-request
   namespace: sdawley-tenant
 spec:
+  serviceAccountName: crw-bot
   params:
   - name: dockerfile
     value: build/dockerfiles/rhel.Dockerfile
