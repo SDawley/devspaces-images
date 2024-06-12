@@ -433,6 +433,8 @@ spec:
   taskRunTemplate: {}
   workspaces:
   - name: workspace
+    secret:
+      secretname: internal-registry
     volumeClaimTemplate:
       metadata:
         creationTimestamp: null
