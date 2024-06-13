@@ -43,4 +43,4 @@ COPY --from=builder ${DEVFILE_REGISTRY} /public/dashboard/devfile-registry
 COPY build/dockerfiles/rhel.entrypoint.sh /usr/local/bin
 CMD ["/usr/local/bin/rhel.entrypoint.sh"]
 
-## Append Brew metadata
+## Append Brew metadata 
