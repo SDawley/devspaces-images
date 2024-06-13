@@ -42,4 +42,4 @@ RUN dnf -y install shadow-utils && \
 
 USER appuser
 COPY --from=builder /usr/local/bin/configbump /usr/local/bin/configbump
-ENTRYPOINT [ "/usr/local/bin/configbump" ]
+ENTRYPOINT [ "/usr/local/bin/configbump" ]  
