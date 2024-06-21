@@ -27,6 +27,13 @@ spec:
     value: build/dockerfiles/rhel.Dockerfile
   - name: path-context
     value: devspaces-dashboard
+  #- name: hermetic
+  #  value: "true"
+  #- name: prefetch-input
+  #  value: '{"type": "yarn", "path": "devspaces-dashboard"}'
+  # Do I really need to set the default? Or can I do this:
+  #- name: build-source-image
+  #  value: "true"
   pipelineSpec:
     finally:
     - name: show-sbom
