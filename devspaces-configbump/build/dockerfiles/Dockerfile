@@ -11,7 +11,7 @@
 #
 # Note: if we used a UBI image we could keep this current with
 # https://github.com/eclipse-che/che-release/blob/main/.github/workflows/update-base-images.yml
-FROM docker.io/golang:1.18-alpine as builder
+FROM docker.io/golang:1.22-alpine as builder
 
 ARG BUILD_DATE
 ARG VCS_REF
